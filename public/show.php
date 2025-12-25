@@ -26,8 +26,8 @@ $movies = getAllMovies($conn);
 					<td><?= htmlspecialchars($movie['genre']) ?></td>
 					<td><?= htmlspecialchars($movie['casts']) ?></td>
 					<td>
-						<a href="edit.php?id=<?= $movie['id'] ?>" class"edit-btn"> Edit </a>
-						<a href="delete.php?id=<?= $movie['id'] ?>" class"delete-btn" onclick="return confirm('Delete this movie')">Delete </a>
+						<a href="edit.php?id=<?= $movie['id'] ?>" class="btn-edit"> Edit </a>
+						<a href="delete.php?id=<?= $movie['id'] ?>" class="btn-delete" onclick="return confirm('Delete this movie')">Delete </a>
 						
 					</td>
 				</tr>
@@ -36,3 +36,4 @@ $movies = getAllMovies($conn);
 		</table>
 	<?php endif ?>
 	</section>
+	

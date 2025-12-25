@@ -8,16 +8,21 @@
 </head>
 <body>
 
-<header>
-	<nav>
-		<h1>Movie Database</h1>
+<header class="site-header">
+	<nav class="navbar">
+		<div class="nav-left">
+		<h1 class="logo">MovieDB</h1>
+		</div>
 
-		<div class="nav-action">
-			<form action="search.php" method="get" style="display:inline;">
-				<input type="text" name="query" placeholder="Search Movies...">
+		<div class="nav-center">
+			<form action="search.php" method="GET" class="search-form">
+				<input type="text" name="q" placeholder="Search Movies..." required>
 				<button type="submit">Search</button>
 			</form>
 		</div>
+
+		<div class="nav-right">
+			<a href="add.php" class="btn-add">+ Add Movie </a>
+		</div>
 	</nav>
-	<hr>
 </header>

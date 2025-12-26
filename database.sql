@@ -19,12 +19,21 @@ CREATE TABLE IF NOT EXISTS casts(
 	actor_name VARCHAR(100) NOT NULL,
 	FOREIGN KEY(movie_id) REFERENCES movies(id) ON DELETE CASCADE);
 
+ALTER TABLE genres
+ADD UNIQUE KEY unique_genre_name (name);
+
+ALTER TABLE casts
+ADD UNIQUE KEY unique_movie_actor (movie_id, actor_name);
+
 
 
 INSERT IGNORE INTO genres (name) VALUES
 ('Action'),
 ('Drama'),
-('Comedy');
+('Comedy'),
+('Sci-Fi'),
+('Horror'),
+('Thriller');
 
 INSERT IGNORE INTO movies (title, release_year, rating, genre_id) VALUES
 ('The Action Hero', 2022, 8.5, 1),

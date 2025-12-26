@@ -1,3 +1,7 @@
+<?php 
+$currentPage = basename($_SERVER['PHP_SELF']);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +26,9 @@
 		</div>
 
 		<div class="nav-right">
+			<?php if($currentPage !== 'add.php' && $currentPage !== 'edit.php'): ?>
 			<a href="add.php" class="btn-add">+ Add Movie </a>
+		<?php endif ?>
 		</div>
 	</nav>
 </header>

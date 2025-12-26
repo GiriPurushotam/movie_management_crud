@@ -6,7 +6,7 @@ function getAllMovies($conn) {
 
 	
 
-	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, GROUP_CONCAT(casts.actor_name SEPARATOR ', ') AS casts FROM movies
+	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
 	LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id
 	GROUP BY movies.id ORDER BY movies.title ASC";
 

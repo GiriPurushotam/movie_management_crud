@@ -8,7 +8,7 @@ function getAllMovies($conn) {
 
 	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
 	LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id
-	GROUP BY movies.id ORDER BY movies.title ASC";
+	GROUP BY movies.id ORDER BY movies.id DESC";
 
 	$result = mysqli_query($conn, $sql);
 
@@ -17,4 +17,70 @@ function getAllMovies($conn) {
 	}
 
 	return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function getGenres($conn) {
+$result = mysqli_query($conn, "SELECT id, name FROM genres ORDER BY name ASC");
+if($result) {
+	return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+}
+
+
+function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts) {
+
+	//** Adding movie using prepared statements to avoid sql injection **//
+
+	$stmt = mysqli_prepare($conn, "INSERT INTO movies (title, release_year, rating, genre_id) VALUES (?, ?, ?, ?)");
+
+	mysqli_stmt_bind_param($stmt, "sidi", $title, $release_year, $rating, $genre_id);
+
+	mysqli_stmt_execute($stmt);
+
+	$movie_id = mysqli_insert_id($conn);
+	mysqli_stmt_close($stmt);
+
+
+	//** Adding casts ** //
+
+	if(!empty($casts)) {
+		$castArray = array_map('trim', explode(',', $casts));
+
+		$castStmt = mysqli_prepare($conn, "INSERT IGNORE INTO casts (movie_id, actor_name) VALUES (?, ?)");
+		foreach($castArray as $actor) {
+			if($actor !== '') {
+				mysqli_stmt_bind_param($castStmt, 'is', $movie_id, $actor);
+				mysqli_stmt_execute($castStmt);
+			}
+		}
+
+		mysqli_stmt_close($castStmt);
+
+	}
+
+	header("Location: index.php?success=1");
+	exit;
+
+}
+
+function deleteMovies($conn, $id) {
+	$stmt = mysqli_prepare($conn, "DELETE FROM movies WHERE id=?");
+	mysqli_stmt_bind_param($stmt, 'i', $id);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+
+	return true;
+}
+
+function flashMessage() {
+	if(isset($_GET['success'])) {
+		return 'Movie Added Successfully';
+	}
+
+	if(isset($_GET['deleted'])) {
+		return 'Movie Deleted Successfully';
+	}
+
+	return null;
 }

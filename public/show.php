@@ -1,3 +1,7 @@
+<?php if($msg = flashMessage()): ?>
+<div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php endif; ?>
+
 <?php 
 $movies = getAllMovies($conn);
 ?>

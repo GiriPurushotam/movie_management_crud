@@ -2,6 +2,19 @@
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/header.php';
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+	addMovie(
+		$conn,
+		$_POST['title'],
+		$_POST['release_year'],
+		$_POST['rating'],
+		$_POST['genre_id'],
+		$_POST['casts'],
+	);
+}
+
+$genres = getGenres($conn);
 ?>
 
 <main class="form-page">
@@ -9,7 +22,7 @@ require_once __DIR__ . '/../includes/header.php';
 	
 	<h1>Add Movie</h1>
 
-	<form action="POST" class="movie-form">
+	<form method="POST" class="movie-form">
 		<div class="form-group">
 			<label for="">Movie Title</label>
 			<input type="text" name="title" required>
@@ -29,6 +42,9 @@ require_once __DIR__ . '/../includes/header.php';
 			<label for="">Genre</label>
 			<select name="genre_id" id="" required>
 				<option value="">Select Genre</option>
+				<?php foreach($genres as $genre): ?>
+					<option value="<?= $genre['id'] ?>"><?= htmlspecialchars($genre['name']) ?></option>
+				<?php  endforeach; ?>
 			</select>
 		</div>
 

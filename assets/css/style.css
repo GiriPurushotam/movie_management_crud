@@ -25,6 +25,11 @@ body {
 	font-size: 22px;
 }
 
+.logo a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
 .search-form {
 	display: flex;
 	gap: 5px;

@@ -15,7 +15,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <header class="site-header">
 	<nav class="navbar">
 		<div class="nav-left">
-		<h1 class="logo">MovieDB </h1> 
+		<h1 class="logo"><a href="index.php">MovieDB</a></h1> 
 		</div>
 
 		<div class="nav-center">

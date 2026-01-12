@@ -19,6 +19,7 @@ $movies = getAllMovies($conn);
 					<th>Release Year</th>
 					<th>Genre</th>
 					<th>Cast</th>
+					<th>Rating</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -29,6 +30,7 @@ $movies = getAllMovies($conn);
 					<td><?= htmlspecialchars($movie['release_year']) ?></td>
 					<td><?= htmlspecialchars($movie['genre']) ?></td>
 					<td><?= htmlspecialchars($movie['casts'] ?? '') ?></td>
+					<td><?= htmlspecialchars($movie['rating'] ?? '') ?></td>
 					<td>
 						<a href="edit.php?id=<?= $movie['id'] ?>" class="btn-edit"> Edit </a>
 						<a href="delete.php?id=<?= $movie['id'] ?>" class="btn-delete" onclick="return confirm('Delete this movie')">Delete </a>

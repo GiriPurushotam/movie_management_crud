@@ -82,5 +82,55 @@ function flashMessage() {
 		return 'Movie Deleted Successfully';
 	}
 
+	if(isset($_GET['updated'])) {
+		return 'Movie Updated Successfully';
+	}
+
 	return null;
+}
+
+function editMovie($conn, $id) {
+	$stmt = mysqli_prepare($conn, "SELECT movies.*, GROUP_CONCAT(casts.actor_name SEPARATOR ', ' ) AS casts FROM movies LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.id = ? GROUP BY movies.id");
+	mysqli_stmt_bind_param($stmt, 'i', $id);
+	mysqli_stmt_execute($stmt);
+
+	$result = mysqli_stmt_get_result($stmt);
+	$movie = mysqli_fetch_assoc($result);
+	mysqli_stmt_close($stmt);
+
+	return $movie;
+}
+
+function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $casts = '') {
+	//** Updating Movies **//
+
+	$stmt = mysqli_prepare($conn, "UPDATE movies SET title = ?, release_year = ?, rating = ?, genre_id = ? WHERE id = ?");
+
+	mysqli_stmt_bind_param($stmt, 'sidis', $title, $release_year, $rating, $genre_id, $id);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
+
+	//** Updating Casts **// 
+
+	$delCast = mysqli_prepare($conn, "DELETE FROM casts WHERE movie_id = ?");
+	mysqli_stmt_bind_param($delCast, 'i', $id);
+	mysqli_stmt_execute($delCast);
+	mysqli_stmt_close($delCast);
+
+	if(!empty($casts)) {
+		$castArray = array_map('trim', explode(',', $casts));
+		$insertCast = mysqli_prepare($conn, "INSERT IGNORE INTO casts (movie_id, actor_name) VALUES (?, ?)");
+
+		foreach($castArray as $actor) {
+			if($actor !== '') {
+				mysqli_stmt_bind_param($insertCast, 'is', $id, $actor);
+				mysqli_stmt_execute($insertCast);
+			}
+		}
+
+		mysqli_stmt_close($insertCast);
+
+	}
+
+
 }

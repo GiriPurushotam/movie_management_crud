@@ -20,7 +20,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 		<div class="nav-center">
 			<form action="search.php" method="GET" class="search-form">
-				<input type="text" name="q" placeholder="Search Movies..." required>
+				<input type="text" name="q" id="searchInput" placeholder="Search Movies..." required>
+				<div id="autocompleteResults" class="autocomplete-results"></div>
 				<button type="submit">Search</button>
 			</form>
 		</div>

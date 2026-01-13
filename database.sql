@@ -36,14 +36,17 @@ INSERT IGNORE INTO genres (name) VALUES
 ('Thriller');
 
 INSERT IGNORE INTO movies (title, release_year, rating, genre_id) VALUES
-('The Action Hero', 2022, 8.5, 1),
-('Love and Life', 2021, 7.2, 2),
-('Funny Moments', 2023, 6.8, 3);
+('RRR', 2022, 7.8, 1),
+('Animal', 2023, 6.2, 2),
+('Dhurandhar', 2025, 8.6, 5);
 
 INSERT IGNORE INTO casts (movie_id, actor_name) VALUES
-(1, 'John Doe'),
-(1, 'Jane Smith'),
-(2, 'Alice Brown'),
-(2, 'Bob White'),
-(3, 'Chris Green'),
-(3, 'Emma Black');
+(1, 'Ram Charan'),
+(1, 'NTR'),
+(2, 'Ranbir Kapoor'),
+(2, 'Tripti Dimri'),
+(2, 'Anil Kapoor'),
+(3, 'Ranveer Singh'),
+(3, 'Arjun Rampal'),
+(3, 'Sanjay Dutt'),
+(3, 'Akshaye Khanna');

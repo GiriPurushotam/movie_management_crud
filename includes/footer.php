@@ -27,5 +27,7 @@
     }, 5000);
 });
 </script>
+
+<script src="/movie_project/assets/js/search.js"></script>
 </body>
 </html>

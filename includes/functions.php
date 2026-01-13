@@ -134,3 +134,17 @@ function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $cas
 
 
 }
+
+function searchMovie($conn, $query) {
+
+	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.title LIKE ? GROUP BY movies.id ORDER BY movies.created_at DESC";
+
+	$stmt = mysqli_prepare($conn, $sql);
+
+	$search = '%' . $query . '%';
+	mysqli_stmt_bind_param($stmt, 's', $search);
+	mysqli_stmt_execute($stmt);
+
+	$result = mysqli_stmt_get_result($stmt);
+	return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}

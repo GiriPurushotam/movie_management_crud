@@ -2,33 +2,53 @@
 
 require_once __DIR__ . '/../config/db.php';
 
-function getAllMovies($conn) {
+function requireAuth()
+{
+	if (session_start() === PHP_SESSION_NONE) {
+		session_start();
+	}
 
-	
+	if (!isset($_SESSION['user_id'])) {
+		header('Location: /auth/login.php ');
+		exit;
+	}
+}
 
+function isLoggedIn(): bool
+{
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
+
+	return isset($_SESSION['user_id']);
+}
+
+function getAllMovies($conn)
+{
 	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
 	LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id
 	GROUP BY movies.id, movies.title, movies.release_year, movies.rating, genres.name ORDER BY movies.id DESC";
 
 	$result = mysqli_query($conn, $sql);
 
-	if(!$result) {
+	if (!$result) {
 		return [];
 	}
 
 	return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function getGenres($conn) {
-$result = mysqli_query($conn, "SELECT id, name FROM genres ORDER BY name ASC");
-if($result) {
-	return mysqli_fetch_all($result, MYSQLI_ASSOC);
+function getGenres($conn)
+{
+	$result = mysqli_query($conn, "SELECT id, name FROM genres ORDER BY name ASC");
+	if ($result) {
+		return mysqli_fetch_all($result, MYSQLI_ASSOC);
+	}
 }
 
-}
 
-
-function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts) {
+function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts)
+{
 
 	//** Adding movie using prepared statements to avoid sql injection **//
 
@@ -44,27 +64,26 @@ function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts) {
 
 	//** Adding casts ** //
 
-	if(!empty($casts)) {
+	if (!empty($casts)) {
 		$castArray = array_map('trim', explode(',', $casts));
 
 		$castStmt = mysqli_prepare($conn, "INSERT IGNORE INTO casts (movie_id, actor_name) VALUES (?, ?)");
-		foreach($castArray as $actor) {
-			if($actor !== '') {
+		foreach ($castArray as $actor) {
+			if ($actor !== '') {
 				mysqli_stmt_bind_param($castStmt, 'is', $movie_id, $actor);
 				mysqli_stmt_execute($castStmt);
 			}
 		}
 
 		mysqli_stmt_close($castStmt);
-
 	}
 
 	header("Location: index.php?success=1");
 	exit;
-
 }
 
-function deleteMovies($conn, $id) {
+function deleteMovies($conn, $id)
+{
 	$stmt = mysqli_prepare($conn, "DELETE FROM movies WHERE id=?");
 	mysqli_stmt_bind_param($stmt, 'i', $id);
 	mysqli_stmt_execute($stmt);
@@ -73,23 +92,25 @@ function deleteMovies($conn, $id) {
 	return true;
 }
 
-function flashMessage() {
-	if(isset($_GET['success'])) {
+function flashMessage()
+{
+	if (isset($_GET['success'])) {
 		return 'Movie Added Successfully';
 	}
 
-	if(isset($_GET['deleted'])) {
+	if (isset($_GET['deleted'])) {
 		return 'Movie Deleted Successfully';
 	}
 
-	if(isset($_GET['updated'])) {
+	if (isset($_GET['updated'])) {
 		return 'Movie Updated Successfully';
 	}
 
 	return null;
 }
 
-function editMovie($conn, $id) {
+function editMovie($conn, $id)
+{
 	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id, GROUP_CONCAT(casts.actor_name SEPARATOR ', ' ) AS casts FROM movies LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.id = ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id";
 
 	$stmt = mysqli_prepare($conn, $sql);
@@ -103,7 +124,8 @@ function editMovie($conn, $id) {
 	return $movie;
 }
 
-function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $casts = '') {
+function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $casts = '')
+{
 	//** Updating Movies **//
 
 	$stmt = mysqli_prepare($conn, "UPDATE movies SET title = ?, release_year = ?, rating = ?, genre_id = ? WHERE id = ?");
@@ -119,25 +141,23 @@ function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $cas
 	mysqli_stmt_execute($delCast);
 	mysqli_stmt_close($delCast);
 
-	if(!empty($casts)) {
+	if (!empty($casts)) {
 		$castArray = array_map('trim', explode(',', $casts));
 		$insertCast = mysqli_prepare($conn, "INSERT IGNORE INTO casts (movie_id, actor_name) VALUES (?, ?)");
 
-		foreach($castArray as $actor) {
-			if($actor !== '') {
+		foreach ($castArray as $actor) {
+			if ($actor !== '') {
 				mysqli_stmt_bind_param($insertCast, 'is', $id, $actor);
 				mysqli_stmt_execute($insertCast);
 			}
 		}
 
 		mysqli_stmt_close($insertCast);
-
 	}
-
-
 }
 
-function searchMovie($conn, $query) {
+function searchMovie($conn, $query)
+{
 
 	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, GROUP_CONCAT(casts.actor_name SEPARATOR ', ') AS casts FROM movies LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.title LIKE ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, genres.name ORDER BY movies.id DESC";
 

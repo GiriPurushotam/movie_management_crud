@@ -1,8 +1,11 @@
-<?php if($msg = flashMessage()): ?>
-<div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php require_once __DIR__ . '/../includes/functions.php';
+requireAuth();
+?>
+<?php if ($msg = flashMessage()): ?>
+	<div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
 <?php endif; ?>
 
-<?php 
+<?php
 $movies = getAllMovies($conn);
 ?>
 
@@ -12,4 +15,3 @@ $movies = getAllMovies($conn);
 	<?php require __DIR__ . '/../includes/movie_table.php'; ?>
 
 </section>
-	

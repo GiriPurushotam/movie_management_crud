@@ -1,6 +1,35 @@
 <?php
+require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    if ($email === '' || $password === '') {
+        header('Location: login.php?error=All fields require');
+        exit;
+    }
+
+    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email =? ");
+    mysqli_stmt_bind_param($stmt, 's', $email);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+
+    if (!$user || !password_verify($password, $user['password'])) {
+        header('Location: login.php?error=Invalid email or Password');
+        exit;
+    }
+
+    authUser($user);
+
+    header('Location: /movie_project/public/index.php?sucess_auth=welcome');
+    exit;
+}
 ?>
 
 <main class="auth-page">

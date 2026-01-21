@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../includes/header.php';
 requireAuth();
+require_once __DIR__ . '/../includes/header.php';
+
 
 if (!isset($_GET['id'])) {
 	header("Location: index.php");
@@ -24,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	);
 
-	header("Location: index.php?updated=1");
+	setFlashMessage('Movie updated Successfully');
+	header("Location: index.php");
 }
 
 if (!$movie) {

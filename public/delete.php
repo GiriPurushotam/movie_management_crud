@@ -6,6 +6,7 @@ requireAuth();
 
 if (isset($_GET['id'])) {
 	deleteMovies($conn, $_GET['id']);
-	header("Location: index.php?deleted=1");
+	setFlashMessage('Movie deleted successfully');
+	header("Location: index.php");
 	exit;
 }

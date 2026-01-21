@@ -40,7 +40,7 @@ INSERT INTO users (name, email, password)
 VALUES (
 		'Tanisha Thapa',
 		'tanisha1@dummy.com',
-		'$2y$10$9r9k9YpFz8Z6V0x9tZ6pMeR3qYw7YwG9R3EJZ3Zk3G6Qy1y4ZxQ1C'
+		'$2y$10$TcjZr9SxBYTBcq.9xucih.9ciA6s2.b1a6.vbGvyHStMR6l9JYzbO'
 	);
 INSERT IGNORE INTO movies (title, release_year, rating, genre_id)
 VALUES ('RRR', 2022, 7.8, 1),

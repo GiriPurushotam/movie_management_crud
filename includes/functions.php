@@ -99,7 +99,8 @@ function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts)
 		mysqli_stmt_close($castStmt);
 	}
 
-	header("Location: index.php?success=1");
+	setFlashMessage('Movie added successfully');
+	header("Location: index.php");
 	exit;
 }
 
@@ -113,25 +114,23 @@ function deleteMovies($conn, $id)
 	return true;
 }
 
+function setFlashMessage(string $message)
+{
+	startSession();
+	$_SESSION['flash_message'] = $message;
+}
+
 function flashMessage()
 {
-	if (isset($_GET['success'])) {
-		return 'Movie Added Successfully';
+	startSession();
+
+	if (!isset($_SESSION['flash_message'])) {
+		return null;
 	}
 
-	if (isset($_GET['deleted'])) {
-		return 'Movie Deleted Successfully';
-	}
-
-	if (isset($_GET['updated'])) {
-		return 'Movie Updated Successfully';
-	}
-
-	if (isset($_GET['success_auth']) && $_GET['success_auth'] === 'welcome') {
-		return 'Welcome' . getAuthUserName();
-	}
-
-	return null;
+	$message = $_SESSION['flash_message'];
+	unset($_SESSION['flash_message']);
+	return $message;
 }
 
 function editMovie($conn, $id)

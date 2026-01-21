@@ -33,13 +33,19 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 			<div class="nav-right">
 				<?php if (isLoggedIn()): ?>
-					<?php if ($currentPage !== 'add.php' && $currentPage !== 'edit.php'): ?>
+					<?php if ($currentPage !== 'add.php' && $currentPage !== 'edit.php' && $currentPage !== 'login.php' && $currentPage !== 'signUp.php'): ?>
 						<a href="add.php" class="btn-add">+ Add Movie </a>
 					<?php endif ?>
 					<?php if ($currentPage !== 'login.php' && $currentPage !== 'signUp.php') : ?>
-						<a class="btn-add" href="../public/auth/logout.php">Logout</a>
-					<?php else: ?>
-						<a class="btn-add" href="../public/auth/login.php">Login</a>
+						<?php if (isLoggedIn()): ?>
+							<div class="user-menu">
+								<span class="user-name">Hi, <?= htmlspecialchars(getAuthUserName()) ?></span>
+								<div class="user-dropdown">
+									<a href="../public/auth/logout.php">Logout</a>
+								</div>
+							</div>
+						<?php endif; ?>
+
 					<?php endif; ?>
 
 				<?php endif; ?>

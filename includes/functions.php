@@ -2,25 +2,46 @@
 
 require_once __DIR__ . '/../config/db.php';
 
-function requireAuth()
+function startSession()
 {
-	if (session_start() === PHP_SESSION_NONE) {
+	if (session_status() === PHP_SESSION_NONE) {
 		session_start();
 	}
+}
+
+function requireAuth()
+{
+	startSession();
 
 	if (!isset($_SESSION['user_id'])) {
-		header('Location: ../public/auth/login.php ');
+		header('Location: /movie_project/public/auth/login.php ');
 		exit;
 	}
 }
 
-function isLoggedIn(): bool
+function isLoggedIn()
 {
-	if (session_status() == PHP_SESSION_NONE) {
-		session_start();
-	}
+	startSession();
 
 	return isset($_SESSION['user_id']);
+}
+
+function authUser($user)
+{
+	startSession();
+	$_SESSION['user_id'] = $user['id'];
+	$_SESSION['user_name'] = $user['name'];
+}
+
+function getAuthUserName()
+{
+	return $_SESSION['user_name'];
+}
+
+function logoutUser()
+{
+	startSession();
+	session_destroy();
 }
 
 function getAllMovies($conn)
@@ -104,6 +125,10 @@ function flashMessage()
 
 	if (isset($_GET['updated'])) {
 		return 'Movie Updated Successfully';
+	}
+
+	if (isset($_GET['success_auth']) && $_GET['success_auth'] === 'welcome') {
+		return 'Welcome' . getAuthUserName();
 	}
 
 	return null;

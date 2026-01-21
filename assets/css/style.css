@@ -19,6 +19,12 @@ body {
 	justify-content: space-between;
 }
 
+.nav-right {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
 .logo {
 	color: #ffffff;
 	margin: 0;
@@ -102,6 +108,50 @@ body {
 	border-radius: 4px;
 	font-weight: bold;
 }
+
+
+.user-menu {
+	position: relative;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+
+.user-name {
+	font-weight: 700;
+	color: #ffffff;
+	white-space: nowrap;
+	padding: 6px 10px;
+}
+
+.user-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	background-color: #fff;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	display: none;
+	min-width: 120px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-dropdown a {
+	display: block;
+	padding: 8px 12px;
+	color: #333;
+	text-decoration: none;
+}
+
+.user-dropdown a:hover {
+	background: #f5f5f5;
+
+}
+
+.user-menu:hover .user-dropdown {
+	display: block;
+}
+
 
 .site-footer {
 	background: #0d1b2a;

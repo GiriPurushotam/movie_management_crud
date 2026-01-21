@@ -1,6 +1,58 @@
 <?php
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
+
+?>
+
+<?php if ($msg = flashMessage()): ?>
+    <div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php endif; ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
+
+    if ($name === '' || $email === '' || $password === '' || $confirmPassword === '') {
+        setFlashMessage('All fields required');
+        header('Location: signUp.php');
+        exit;
+    }
+
+    if ($password !== $confirmPassword) {
+        setFlashMessage('Password do not matched');
+        header('Location: signUp.php');
+        exit;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlashMessage('Invalid email format');
+        header('Location: signUp.php');
+        exit;
+    }
+
+    $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
+    mysqli_stmt_bind_param($stmt, 's', $email);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        setFlashMessage('Email already exists');
+        header('Location:signUp.php');
+        exit;
+    }
+
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = mysqli_prepare($conn, "INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, 'sss', $name, $email, $hash);
+    mysqli_stmt_execute($stmt);
+
+    setFlashMessage('Account created successfully. Please login');
+    header('Location: login.php');
+    exit;
+}
 ?>
 
 <main class="auth-page">

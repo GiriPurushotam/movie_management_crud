@@ -3,13 +3,18 @@ require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
 
-
+?>
+<?php if ($msg = flashMessage()): ?>
+    <div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php endif; ?>
+<?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     if ($email === '' || $password === '') {
-        header('Location: login.php?error=All fields require');
+        setFlashMessage('All fields require');
+        header('Location: login.php');
         exit;
     }
 
@@ -21,13 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = mysqli_fetch_assoc($result);
 
     if (!$user || !password_verify($password, $user['password'])) {
-        header('Location: login.php?error=Invalid email or Password');
+        setFlashMessage('Invalid email or Password');
+        header('Location: login.php');
         exit;
     }
 
     authUser($user);
 
-    header('Location: /movie_project/public/index.php?sucess_auth=welcome');
+    setFlashMessage('Welcome ' . $user['name']);
+    header('Location: /movie_project/public/index.php');
     exit;
 }
 ?>

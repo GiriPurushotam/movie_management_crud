@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../config/db.php';
 
+
+//** starting session for auth **/
 function startSession()
 {
 	if (session_status() === PHP_SESSION_NONE) {
@@ -9,6 +11,8 @@ function startSession()
 	}
 }
 
+
+//** redirect user to login page when not logged in  **/
 function requireAuth()
 {
 	startSession();
@@ -19,6 +23,7 @@ function requireAuth()
 	}
 }
 
+//** fetching user_id after logged in **/
 function isLoggedIn()
 {
 	startSession();
@@ -26,6 +31,7 @@ function isLoggedIn()
 	return isset($_SESSION['user_id']);
 }
 
+//** fetching user's data and id for display inside header **/
 function authUser($user)
 {
 	startSession();
@@ -33,17 +39,22 @@ function authUser($user)
 	$_SESSION['user_name'] = $user['name'];
 }
 
+//** fetching user name **/
 function getAuthUserName()
 {
 	return $_SESSION['user_name'];
 }
 
+
+//** logout function  **/
 function logoutUser()
 {
 	startSession();
 	session_destroy();
 }
 
+
+//** fetching all movies data **/
 function getAllMovies($conn)
 {
 	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
@@ -114,23 +125,29 @@ function deleteMovies($conn, $id)
 	return true;
 }
 
-function setFlashMessage(string $message)
+//** display success and error msg */
+
+function setFlashMessage(string $message, string $type = 'success')
 {
 	startSession();
-	$_SESSION['flash_message'] = $message;
+
+	$_SESSION['flash'] = [
+		'message' => $message,
+		'type' => $type
+	];
 }
 
 function flashMessage()
 {
 	startSession();
 
-	if (!isset($_SESSION['flash_message'])) {
+	if (!isset($_SESSION['flash'])) {
 		return null;
 	}
 
-	$message = $_SESSION['flash_message'];
-	unset($_SESSION['flash_message']);
-	return $message;
+	$flash = $_SESSION['flash'];
+	unset($_SESSION['flash']);
+	return $flash;
 }
 
 function editMovie($conn, $id)
@@ -179,6 +196,8 @@ function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $cas
 		mysqli_stmt_close($insertCast);
 	}
 }
+
+//** search movie */
 
 function searchMovie($conn, $query)
 {

@@ -4,8 +4,8 @@ require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
 
 ?>
-<?php if ($msg = flashMessage()): ?>
-    <div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php if ($flash = flashMessage()): ?>
+    <div class="<?= $flash['type'] === 'error' ? 'error-flash-msg' : 'flash-msg' ?>"><?= htmlspecialchars($flash['message']) ?></div>
 <?php endif; ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if ($email === '' || $password === '') {
-        setFlashMessage('All fields require');
+        setFlashMessage('All fields require', 'error');
         header('Location: login.php');
         exit;
     }
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = mysqli_fetch_assoc($result);
 
     if (!$user || !password_verify($password, $user['password'])) {
-        setFlashMessage('Invalid email or Password');
+        setFlashMessage('Invalid email or Password', 'error');
         header('Location: login.php');
         exit;
     }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<main class="auth-page">
+<main class=" auth-page">
     <div class="auth-card">
         <h2>Login</h2>
         <form method="POST" class="auth-form">

@@ -334,6 +334,19 @@ main {
 	transition: opacity 0.5s ease;
 }
 
+.error-flash-msg {
+	max-width: 500px;
+	margin: 20px auto;
+	padding: 12px 16px;
+	background: #e6fffa;
+	color: #c50616;
+	border-left: 5px solid #e0e4e3;
+	border-radius: 6px;
+	text-align: center;
+	font-weight: 600;
+	transition: opacity 0.5s ease;
+}
+
 .auth-page {
 min-height: 80vh;
 display: flex;

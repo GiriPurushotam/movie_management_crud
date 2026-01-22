@@ -4,8 +4,8 @@ require_once __DIR__ . '/../../includes/header.php';
 
 ?>
 
-<?php if ($msg = flashMessage()): ?>
-    <div class="flash-msg"><?= htmlspecialchars($msg) ?></div>
+<?php if ($flash = flashMessage()): ?>
+    <div class="<?= $flash['type'] === 'error' ? 'error-flash-msg' : 'flash-msg' ?>"><?= htmlspecialchars($flash['message']) ?></div>
 <?php endif; ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,19 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirmPassword = $_POST['confirm_password'];
 
     if ($name === '' || $email === '' || $password === '' || $confirmPassword === '') {
-        setFlashMessage('All fields required');
+        setFlashMessage('All fields required', 'error');
         header('Location: signUp.php');
         exit;
     }
 
     if ($password !== $confirmPassword) {
-        setFlashMessage('Password do not matched');
+        setFlashMessage('Password do not matched', 'error');
         header('Location: signUp.php');
         exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        setFlashMessage('Invalid email format');
+        setFlashMessage('Invalid email format', 'error');
         header('Location: signUp.php');
         exit;
     }
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_store_result($stmt);
 
     if (mysqli_stmt_num_rows($stmt) > 0) {
-        setFlashMessage('Email already exists');
+        setFlashMessage('Email already exists', 'error');
         header('Location:signUp.php');
         exit;
     }

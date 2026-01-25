@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <main class=" auth-page">
     <div class="auth-card">
-        <h2>Login</h2>
+        <h2>Please Login to complete this action</h2>
         <form method="POST" class="auth-form">
             <div class="form-group">
                 <label for="email">Email</label>

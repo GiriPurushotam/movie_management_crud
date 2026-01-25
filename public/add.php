@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$_POST['rating'],
 		$_POST['genre_id'],
 		$_POST['casts'],
+		$_FILES['image']
 	);
 }
 
@@ -24,7 +25,7 @@ $genres = getGenres($conn);
 
 		<h1>Add Movie</h1>
 
-		<form method="POST" class="movie-form">
+		<form method="POST" class="movie-form" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="">Movie Title</label>
 				<input type="text" name="title" required>
@@ -53,6 +54,11 @@ $genres = getGenres($conn);
 			<div class="form-group">
 				<label for="">Cast</label>
 				<input type="text" name="casts" placeholder="Actor 1, Actor 2">
+			</div>
+
+			<div class="form-group">
+				<label>Movie Picture</label>
+				<input type="file" name="image" accept="image/*">
 			</div>
 
 			<div class="form-actions">

@@ -1,5 +1,4 @@
 <?php require_once __DIR__ . '/../includes/functions.php';
-requireAuth();
 ?>
 <?php if ($flash = flashMessage()): ?>
 	<div class="<?= $flash['type'] === 'error' ? 'error-flash-msg' : 'flash-msg' ?>"><?= htmlspecialchars($flash['message']) ?></div>

@@ -32,16 +32,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 			</div>
 
 			<div class="nav-right">
-				<?php if (isLoggedIn()): ?>
-					<?php if ($currentPage !== 'add.php' && $currentPage !== 'edit.php' && $currentPage !== 'login.php' && $currentPage !== 'signUp.php'): ?>
-						<a href="add.php" class="btn-add">+ Add Movie </a>
-					<?php endif ?>
+
+				<?php if ($currentPage !== 'add.php' && $currentPage !== 'edit.php' && $currentPage !== 'login.php' && $currentPage !== 'signUp.php'): ?>
+					<a href="add.php" class="btn-add">+ Add Movie </a>
+
 					<?php if ($currentPage !== 'login.php' && $currentPage !== 'signUp.php') : ?>
 						<?php if (isLoggedIn()): ?>
 							<div class="user-menu">
 								<span class="user-name">Hi, <?= htmlspecialchars(getAuthUserName()) ?></span>
 								<div class="user-dropdown">
-									<a href="../public/auth/logout.php">Logout</a>
+									<a href="/movie_project/public/auth/logout.php">Logout</a>
 								</div>
 							</div>
 						<?php endif; ?>

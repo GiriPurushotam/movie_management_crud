@@ -54,10 +54,36 @@ function logoutUser()
 }
 
 
+//** display success and error msg */
+
+function setFlashMessage(string $message, string $type = 'success')
+{
+	startSession();
+
+	$_SESSION['flash'] = [
+		'message' => $message,
+		'type' => $type
+	];
+}
+
+function flashMessage()
+{
+	startSession();
+
+	if (!isset($_SESSION['flash'])) {
+		return null;
+	}
+
+	$flash = $_SESSION['flash'];
+	unset($_SESSION['flash']);
+	return $flash;
+}
+
+
 //** fetching all movies data **/
 function getAllMovies($conn)
 {
-	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
+	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, movies.image, genres.name AS genre, IFNULL(GROUP_CONCAT(casts.actor_name SEPARATOR ', '), '') AS casts FROM movies
 	LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id
 	GROUP BY movies.id, movies.title, movies.release_year, movies.rating, genres.name ORDER BY movies.id DESC";
 
@@ -79,14 +105,23 @@ function getGenres($conn)
 }
 
 
-function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts)
+function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts, $imageFile)
 {
 
 	//** Adding movie using prepared statements to avoid sql injection **//
 
-	$stmt = mysqli_prepare($conn, "INSERT INTO movies (title, release_year, rating, genre_id) VALUES (?, ?, ?, ?)");
+	$imageFile = null;
 
-	mysqli_stmt_bind_param($stmt, "sidi", $title, $release_year, $rating, $genre_id);
+	if (!empty($imageFile['name'])) {
+		$ext = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
+		$imageName = uniqid() . '.' . $ext;
+		$uploadPath = __DIR__ . '/../public/uploads' . $imageName;
+		move_uploaded_file($imageFile('tmp_name'), $uploadPath);
+	}
+
+	$stmt = mysqli_prepare($conn, "INSERT INTO movies (title, release_year, rating, genre_id, image) VALUES (?, ?, ?, ?, ?)");
+
+	mysqli_stmt_bind_param($stmt, "sidis", $title, $release_year, $rating, $genre_id, $imageName);
 
 	mysqli_stmt_execute($stmt);
 
@@ -125,30 +160,6 @@ function deleteMovies($conn, $id)
 	return true;
 }
 
-//** display success and error msg */
-
-function setFlashMessage(string $message, string $type = 'success')
-{
-	startSession();
-
-	$_SESSION['flash'] = [
-		'message' => $message,
-		'type' => $type
-	];
-}
-
-function flashMessage()
-{
-	startSession();
-
-	if (!isset($_SESSION['flash'])) {
-		return null;
-	}
-
-	$flash = $_SESSION['flash'];
-	unset($_SESSION['flash']);
-	return $flash;
-}
 
 function editMovie($conn, $id)
 {
@@ -202,7 +213,7 @@ function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $cas
 function searchMovie($conn, $query)
 {
 
-	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, genres.name AS genre, GROUP_CONCAT(casts.actor_name SEPARATOR ', ') AS casts FROM movies LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.title LIKE ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, genres.name ORDER BY movies.id DESC";
+	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, movies.image, genres.name AS genre, GROUP_CONCAT(casts.actor_name SEPARATOR ', ') AS casts FROM movies LEFT JOIN genres ON movies.genre_id = genres.id LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.title LIKE ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, genres.name ORDER BY movies.id DESC";
 
 	$stmt = mysqli_prepare($conn, $sql);
 

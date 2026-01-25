@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS movies (
 	release_year INT NOT NULL,
 	rating DECIMAL(3, 1) NOT NULL,
 	genre_id INT,
+	image VARCHAR(255) DEFAULT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE
 	SET NULL
@@ -42,10 +43,10 @@ VALUES (
 		'tanisha1@dummy.com',
 		'$2y$10$TcjZr9SxBYTBcq.9xucih.9ciA6s2.b1a6.vbGvyHStMR6l9JYzbO'
 	);
-INSERT IGNORE INTO movies (title, release_year, rating, genre_id)
-VALUES ('RRR', 2022, 7.8, 1),
-	('Animal', 2023, 6.2, 2),
-	('Dhurandhar', 2025, 8.6, 5);
+INSERT IGNORE INTO movies (title, release_year, rating, genre_id, image)
+VALUES ('RRR', 2022, 7.8, 1, 'rrr.jpg'),
+	('Animal', 2023, 6.2, 2, 'animal.jpg'),
+	('Dhurandhar', 2025, 8.6, 5, 'dhurandhar.jpg');
 INSERT IGNORE INTO casts (movie_id, actor_name)
 VALUES (1, 'Ram Charan'),
 	(1, 'NTR'),

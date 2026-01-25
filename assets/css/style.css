@@ -428,3 +428,25 @@ justify-content: center;
 .auth-link-btn:hover {
 	color: #0a0601;
 }
+
+.movie-cell {
+	text-align: center;
+}
+
+.movie-thumb {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border-radius: 6px;
+	margin-bottom: 6px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.movie-title {
+	font-weight: 600;
+	color: #c50616;
+	text-align: center;
+	margin-top: 10px;
+}

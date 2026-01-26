@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$_POST['rating'],
 		$_POST['genre_id'],
 		$_POST['casts'],
+		$_FILES['image'] ?? null
 
 	);
 
@@ -40,7 +41,13 @@ if (!$movie) {
 
 		<h1>Edit Movie</h1>
 
-		<form method="POST" class="movie-form">
+		<form method="POST" class="movie-form" enctype="multipart/form-data">
+			<?php if (!empty($movie['image'])): ?>
+				<div class="movie-image">
+					<p class="image-p">Current Image:</p>
+					<img src="/movie_project/public/uploads/<?= htmlspecialchars($movie['image']) ?>" alt="" class="movie-thumb">
+				</div>
+			<?php endif; ?>
 			<div class="form-group">
 				<label for="">Movie Title</label>
 				<input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>" required>
@@ -68,6 +75,11 @@ if (!$movie) {
 			<div class="form-group">
 				<label for="">Cast</label>
 				<input type="text" name="casts" value="<?= htmlspecialchars($movie['casts']) ?>">
+			</div>
+
+			<div class="form-group">
+				<label for="">Change Image</label>
+				<input type="file" name="image">
 			</div>
 
 			<div class="form-actions">

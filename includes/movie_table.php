@@ -17,7 +17,7 @@
 				<tr>
 					<td class="movie-cell">
 						<?php if (!empty($movie['image'])) : ?>
-							<img src="uploads/<?= htmlspecialchars($movie['image']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-thumb">
+							<img src="/movie_project/public/uploads/<?= htmlspecialchars($movie['image']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-thumb">
 						<?php endif; ?>
 						<div class="movie-title">
 							<?= htmlspecialchars($movie['title']) ?>

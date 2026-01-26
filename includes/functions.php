@@ -110,13 +110,14 @@ function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts, $ima
 
 	//** Adding movie using prepared statements to avoid sql injection **//
 
-	$imageFile = null;
+	$imageName = null;
 
-	if (!empty($imageFile['name'])) {
+
+	if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
 		$ext = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
 		$imageName = uniqid() . '.' . $ext;
-		$uploadPath = __DIR__ . '/../public/uploads' . $imageName;
-		move_uploaded_file($imageFile('tmp_name'), $uploadPath);
+		$uploadPath = __DIR__ . '/../public/uploads/' . $imageName;
+		move_uploaded_file($imageFile['tmp_name'], $uploadPath);
 	}
 
 	$stmt = mysqli_prepare($conn, "INSERT INTO movies (title, release_year, rating, genre_id, image) VALUES (?, ?, ?, ?, ?)");
@@ -150,6 +151,8 @@ function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts, $ima
 	exit;
 }
 
+//** delete movie  **/
+
 function deleteMovies($conn, $id)
 {
 	$stmt = mysqli_prepare($conn, "DELETE FROM movies WHERE id=?");
@@ -160,10 +163,10 @@ function deleteMovies($conn, $id)
 	return true;
 }
 
-
+//** populate the edit form **/
 function editMovie($conn, $id)
 {
-	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id, GROUP_CONCAT(casts.actor_name SEPARATOR ', ' ) AS casts FROM movies LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.id = ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id";
+	$sql = "SELECT movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id, movies.image, GROUP_CONCAT(casts.actor_name SEPARATOR ', ' ) AS casts FROM movies LEFT JOIN casts ON movies.id = casts.movie_id WHERE movies.id = ? GROUP BY movies.id, movies.title, movies.release_year, movies.rating, movies.genre_id, movies.image";
 
 	$stmt = mysqli_prepare($conn, $sql);
 	mysqli_stmt_bind_param($stmt, 'i', $id);
@@ -176,13 +179,41 @@ function editMovie($conn, $id)
 	return $movie;
 }
 
-function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $casts = '')
+function updateMovie($conn, $id, $title, $release_year, $rating, $genre_id, $casts = '', $imageFile = null)
 {
 	//** Updating Movies **//
 
-	$stmt = mysqli_prepare($conn, "UPDATE movies SET title = ?, release_year = ?, rating = ?, genre_id = ? WHERE id = ?");
+	$newImageName = null;
 
-	mysqli_stmt_bind_param($stmt, 'sidis', $title, $release_year, $rating, $genre_id, $id);
+	if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
+		$oldStmt = mysqli_prepare($conn, "SELECT image FROM movies WHERE id = ?");
+		mysqli_stmt_bind_param($oldStmt, 'i', $id);
+		mysqli_stmt_execute($oldStmt);
+		$result = mysqli_stmt_get_result($oldStmt);
+		$old = mysqli_fetch_assoc($result);
+		mysqli_stmt_close($oldStmt);
+
+		if (!empty($old['image'])) {
+			$oldPath = __DIR__ . '/../public/includes/' . $old['image'];
+			if (file_exists($oldPath)) {
+				unlink($oldPath);
+			}
+		}
+
+		$ext = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
+		$newImageName = uniqid() . '.' . $ext;
+		move_uploaded_file($imageFile['tmp_name'], __DIR__ . '/../public/uploads/' . $newImageName);
+	}
+
+	if ($newImageName) {
+
+		$stmt = mysqli_prepare($conn, "UPDATE movies SET title = ?, release_year = ?, rating = ?, genre_id = ?, image = ? WHERE id = ?");
+
+		mysqli_stmt_bind_param($stmt, 'sidisi', $title, $release_year, $rating, $genre_id, $newImageName, $id);
+	} else {
+		$stmt = mysqli_prepare($conn, "UPDATE movies SET title = ?, release_year = ?, rating = ?, genre_id = ? WHERE id = ?");
+		mysqli_stmt_bind_param($stmt, 'sidis', $title, $release_year, $rating, $genre_id, $id);
+	}
 	mysqli_stmt_execute($stmt);
 	mysqli_stmt_close($stmt);
 

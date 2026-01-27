@@ -24,25 +24,26 @@ $genres = getGenres($conn);
 	<section class="form-section">
 
 		<h1>Add Movie</h1>
+		<hr>
 
 		<form method="POST" class="movie-form" enctype="multipart/form-data">
 			<div class="form-group">
-				<label for="">Movie Title</label>
+				<label for="" class="movie-p">Movie Title</label>
 				<input type="text" name="title" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Release Year</label>
+				<label for="" class="movie-p">Release Year</label>
 				<input type="number" name="release_year" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Rating</label>
+				<label for="" class="movie-p">Rating</label>
 				<input type="number" step="0.1" name="rating" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Genre</label>
+				<label for="" class="movie-p">Genre</label>
 				<select name="genre_id" id="" required>
 					<option value="">Select Genre</option>
 					<?php foreach ($genres as $genre): ?>
@@ -52,12 +53,12 @@ $genres = getGenres($conn);
 			</div>
 
 			<div class="form-group">
-				<label for="">Cast</label>
+				<label for="" class="movie-p">Cast</label>
 				<input type="text" name="casts" placeholder="Actor 1, Actor 2">
 			</div>
 
 			<div class="form-group">
-				<label>Movie Picture</label>
+				<label class="movie-p">Movie Picture</label>
 				<input type="file" name="image" accept="image/*">
 			</div>
 

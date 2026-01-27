@@ -255,6 +255,7 @@ main {
 
 .form-section h1 {
 	margin-bottom: 20px;
+	color: #134434;
 }
 
 .movie-form {
@@ -449,4 +450,12 @@ justify-content: center;
 	color: #c50616;
 	text-align: center;
 	margin-top: 10px;
+}
+
+.movie-p {
+	font-weight: 600;
+	text-align: center;
+	margin-top: 5px;
+	padding-bottom: 5px;
+	color: #0e2c22;
 }

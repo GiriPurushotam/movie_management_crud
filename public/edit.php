@@ -40,31 +40,32 @@ if (!$movie) {
 	<section class="form-section">
 
 		<h1>Edit Movie</h1>
+		<hr>
 
 		<form method="POST" class="movie-form" enctype="multipart/form-data">
 			<?php if (!empty($movie['image'])): ?>
-				<div class="movie-image">
-					<p class="image-p">Current Image:</p>
+				<div class="form-group">
+					<label for="" class="movie-p">Current Image</label>
 					<img src="/movie_project/public/uploads/<?= htmlspecialchars($movie['image']) ?>" alt="" class="movie-thumb">
 				</div>
 			<?php endif; ?>
 			<div class="form-group">
-				<label for="">Movie Title</label>
+				<label for="" class="movie-p">Movie Title</label>
 				<input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Release Year</label>
+				<label for="" class="movie-p">Release Year</label>
 				<input type="number" name="release_year" value="<?= htmlspecialchars($movie['release_year']) ?>" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Rating</label>
+				<label for="" class="movie-p">Rating</label>
 				<input type="number" step="0.1" name="rating" value="<?= htmlspecialchars($movie['rating']) ?>" required>
 			</div>
 
 			<div class="form-group">
-				<label for="">Genre</label>
+				<label for="" class="movie-p">Genre</label>
 				<select name="genre_id" id="" required>
 					<?php foreach ($genres as $genre): ?>
 						<option value="<?= $genre['id'] ?>" <?= $genre['id'] == $movie['genre_id'] ? 'selected' : '' ?>> <?= htmlspecialchars($genre['name']) ?></option>
@@ -73,12 +74,12 @@ if (!$movie) {
 			</div>
 
 			<div class="form-group">
-				<label for="">Cast</label>
+				<label for="" class="movie-p">Cast</label>
 				<input type="text" name="casts" value="<?= htmlspecialchars($movie['casts']) ?>">
 			</div>
 
 			<div class="form-group">
-				<label for="">Change Image</label>
+				<label for="" class="movie-p">Change Image</label>
 				<input type="file" name="image">
 			</div>
 

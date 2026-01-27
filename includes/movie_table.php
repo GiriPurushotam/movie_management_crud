@@ -17,7 +17,7 @@
 				<tr>
 					<td class="movie-cell">
 						<?php if (!empty($movie['image'])) : ?>
-							<img src="/movie_project/public/uploads/<?= htmlspecialchars($movie['image']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-thumb">
+							<img src="<?= BASE_PATH ?>/public/uploads/<?= htmlspecialchars($movie['image']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-thumb">
 						<?php endif; ?>
 						<div class="movie-title">
 							<?= htmlspecialchars($movie['title']) ?>
@@ -28,8 +28,8 @@
 					<td><?= htmlspecialchars($movie['casts'] ?? '') ?></td>
 					<td><?= htmlspecialchars($movie['rating'] ?? '') ?></td>
 					<td>
-						<a href="edit.php?id=<?= $movie['id'] ?>" class="btn-edit"> Edit </a>
-						<a href="delete.php?id=<?= $movie['id'] ?>" class="btn-delete" onclick="return confirm('Delete this movie')">Delete </a>
+						<a href="<?= BASE_PATH ?>/public/edit.php?id=<?= $movie['id'] ?>" class="btn-edit"> Edit </a>
+						<a href="<?= BASE_PATH ?>/public/delete.php?id=<?= $movie['id'] ?>" class="btn-delete" onclick="return confirm('Delete this movie')">Delete </a>
 
 					</td>
 				</tr>

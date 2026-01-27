@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/config.php';
 
 
 //** starting session for auth **/
@@ -18,7 +19,7 @@ function requireAuth()
 	startSession();
 
 	if (!isset($_SESSION['user_id'])) {
-		header('Location: /movie_project/public/auth/login.php ');
+		header("Location: " . BASE_PATH . "/public/auth/login.php");
 		exit;
 	}
 }
@@ -147,7 +148,7 @@ function addMovie($conn, $title, $release_year, $rating, $genre_id, $casts, $ima
 	}
 
 	setFlashMessage('Movie added successfully');
-	header("Location: index.php");
+	header("Location: " . BASE_PATH . "/public/index.php");
 	exit;
 }
 

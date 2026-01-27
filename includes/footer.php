@@ -27,7 +27,7 @@
 	});
 </script>
 
-<script src="/movie_project/assets/js/search.js"></script>
+<script src="<?= BASE_PATH ?>/assets/js/search.js"></script>
 </body>
 
 </html>

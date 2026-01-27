@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
 
@@ -16,19 +18,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($name === '' || $email === '' || $password === '' || $confirmPassword === '') {
         setFlashMessage('All fields required', 'error');
-        header('Location: signUp.php');
+        header("Location: "  . BASE_PATH . "/public/auth/signUp.php");
         exit;
     }
 
     if ($password !== $confirmPassword) {
         setFlashMessage('Password do not matched', 'error');
-        header('Location: signUp.php');
+        header("Location: "  . BASE_PATH . "/public/auth/signUp.php");
         exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         setFlashMessage('Invalid email format', 'error');
-        header('Location: signUp.php');
+        header("Location: "  . BASE_PATH . "/public/auth/signUp.php");
         exit;
     }
 
@@ -39,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (mysqli_stmt_num_rows($stmt) > 0) {
         setFlashMessage('Email already exists', 'error');
-        header('Location:signUp.php');
+        header("Location: "  . BASE_PATH . "/public/auth/signUp.php");
         exit;
     }
 
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_execute($stmt);
 
     setFlashMessage('Account created successfully. Please login');
-    header('Location: login.php');
+    header("Location: "  . BASE_PATH . "/public/auth/login.php");
     exit;
 }
 ?>

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../includes/functions.php';
 require_once __DIR__ . '/../../includes/header.php';
 
@@ -14,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($email === '' || $password === '') {
         setFlashMessage('All fields require', 'error');
-        header('Location: login.php');
+        header("Location:" . BASE_PATH .  "/public/auth/login.php");
         exit;
     }
 
@@ -27,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!$user || !password_verify($password, $user['password'])) {
         setFlashMessage('Invalid email or Password', 'error');
-        header('Location: login.php');
+        header("Location:" . BASE_PATH .  "/public/auth/login.php");
         exit;
     }
 
     authUser($user);
 
     setFlashMessage('Welcome ' . $user['name']);
-    header('Location: /movie_project/public/index.php');
+    header("Location:" . BASE_PATH .  "/public/index.php");
     exit;
 }
 ?>
